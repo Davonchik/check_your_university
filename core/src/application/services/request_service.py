@@ -8,5 +8,9 @@ class RequestService(IRequestService):
 
     async def get_requests(self):
         return await self.request_dao.get_requests()
+    
+
+    async def update_request(self, request_id: int, request_in: RequestUpdate):
+        return await self.request_dao.update_request(request_id, request_in)
 
     
