@@ -13,5 +13,5 @@ class RequestService(IRequestService):
     async def update_request(self, request_id: int, request_in: RequestUpdate):
         return await self.request_dao.update_request(request_id, request_in)
 
-    async def delete_request(self, request_id: int):
-        return await self.request_dao.delete_request(request_id)
+    # async def delete_request(self, request_id: int):
+    #     return await self.request_dao.delete_request(request_id)

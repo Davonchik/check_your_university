@@ -23,6 +23,6 @@ class IRequestService(Service, ABC):
     async def update_request(self, request_id: int, request_in: RequestUpdate):
         raise NotImplementedError
     
-    @abstractmethod
-    async def delete_request(self, request_id: int):
-        raise NotImplementedError
+    # @abstractmethod
+    # async def delete_request(self, request_id: int):
+    #     raise NotImplementedError

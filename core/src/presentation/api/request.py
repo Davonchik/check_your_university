@@ -9,9 +9,9 @@ async def create_new_request(request_in: RequestCreate, service: RequestServiceA
     return await service.create_request(request_in)
 
 
-@router.post('/delete', response_model=RequestOut)
-async def delete_request(request_id: int, service: RequestServiceAnnotated):
-    return await service.delete_request(request_id)
+# @router.post('/delete', response_model=RequestOut)
+# async def delete_request(request_id: int, service: RequestServiceAnnotated):
+#     return await service.delete_request(request_id)
 
 @router.post('/update', response_model=RequestOut)
 async def update_request(request_id: int, request_in: RequestUpdate, service: RequestServiceAnnotated):
