@@ -9,4 +9,5 @@ class RequestService(IRequestService):
     async def get_requests(self):
         return await self.request_dao.get_requests()
 
-    
+    async def delete_request(self, request_id: int):
+        return await self.request_dao.delete_request(request_id)

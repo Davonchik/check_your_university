@@ -8,4 +8,6 @@ router = APIRouter(prefix="/request", tags=["requests"])
 async def create_new_request(request_in: RequestCreate, service: RequestServiceAnnotated):
     return await service.create_request(request_in)
 
-
+@router.post('/delete', response_model=RequestOut)
+async def delete_request(request_id: int, service: RequestServiceAnnotated):
+    return await service.delete_request(request_id)
