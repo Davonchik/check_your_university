@@ -11,4 +11,3 @@ async def create_new_request(request_in: RequestCreate, service: RequestServiceA
 @router.post('/update', response_model=RequestUpdate)
 async def update_request(request_id: int, request_in: RequestUpdate, service: RequestServiceAnnotated):
     return await service.update_request(request_id, request_in)
-

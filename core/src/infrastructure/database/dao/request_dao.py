@@ -1,4 +1,4 @@
-from src.application.domain.request import RequestCreate, RequestUpdate
+from src.application.domain.request import RequestCreate
 from src.infrastructure.database.models.request import Request
 from src.application.abstractions.dao.i_request_dao import IRequestDao
 from sqlalchemy.future import select
@@ -15,7 +15,7 @@ class RequestDao(IRequestDao):
     async def get_requests(self) -> list[Request]:
         return await self.session.query(Request).all()
     
-    async def update_request(self, request_id: int, request_in: RequestUpdate) -> Request:
+    async def update_request(self, request_id: int, request_in: RequestCreate) -> Request:
         query = select(Request).where(Request.id == request_id)
         result = await self.session.execute(query)
         existing_request = result.scalar_one_or_none()
@@ -29,4 +29,3 @@ class RequestDao(IRequestDao):
         await self.session.commit()
         await self.session.refresh(existing_request)
         return existing_request
-

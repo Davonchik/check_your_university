@@ -23,4 +23,3 @@ class IRequestDao(Dao, ABC):
     # @abstractmethod
     # async def delete_request(self, request_id: int):
     #     raise NotImplementedError
-        
