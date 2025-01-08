@@ -15,7 +15,7 @@ class RequestDao(IRequestDao):
     async def get_requests(self) -> list[Request]:
         return await self.session.query(Request).all()
     
-<<<<<<< HEAD
+
     async def delete_request(self, request_id: int):
         query = select(Request).where(Request.id == request_id)
         result = await self.session.execute(query)
@@ -25,7 +25,7 @@ class RequestDao(IRequestDao):
         await self.session.delete(request_to_delete)
         await self.session.commit()
         return request_to_delete
-=======
+    
     async def update_request(self, request_id: int, request_in: RequestCreate) -> Request:
         query = select(Request).where(Request.id == request_id)
         result = await self.session.execute(query)
@@ -40,4 +40,4 @@ class RequestDao(IRequestDao):
         await self.session.commit()
         await self.session.refresh(existing_request)
         return existing_request
->>>>>>> update_method_feature
+
