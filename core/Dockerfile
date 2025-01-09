@@ -8,7 +8,7 @@ RUN mkdir /core
 WORKDIR /core
 
 COPY poetry.lock pyproject.toml ./
-RUN pip install poetry && poetry config virtualenvs.create false && poetry install --no-dev
+RUN pip install poetry && poetry config virtualenvs.create false && poetry install --no-root
 
 COPY . .
 

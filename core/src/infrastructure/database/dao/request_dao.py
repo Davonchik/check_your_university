@@ -22,7 +22,7 @@ class RequestDao(IRequestDao):
         if not existing_request:
             return NoResultFound(f"Request with id {request_id} not found")
         
-        for key, value in request_in.dict().items():    
+        for key, value in request_in.dict().items():  
             setattr(existing_request, key, value)
         
         self.session.add(existing_request)
