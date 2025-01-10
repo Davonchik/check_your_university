@@ -6,6 +6,7 @@ from api_client import APIClient
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
+from keyboards.reply_keyboards import main_keyboard
 
 
 dp = Dispatcher()
@@ -20,11 +21,27 @@ class Request(StatesGroup):
     
 
 @dp.message(CommandStart())
-async def start(message: types.Message, state: FSMContext):
+async def start(message: types.Message):
     user = await api_client.create_user(str(message.from_user.id))
-    await state.set_state(Request.building_name)
+    #await state.set_state(Request.building_name)
     print(user)
-    await message.answer("Hello, I'm a bot!")
+    await message.answer(
+        "Hello, I'm a bot! Choose an option below:", 
+        reply_markup=main_keyboard
+    )
+
+@dp.message(lambda message: message.text == "About us")
+async def about_us(message: types.Message):
+    # Отправляем текст о компании
+    await message.answer(
+        "We are a company that values innovation and quality. "
+        "Our mission is to provide the best services for our clients."
+    )
+
+@dp.message(lambda message: message.text == "Create a request")
+async def create_request(message: types.Message, state: FSMContext):
+    await state.set_state(Request.building_name)
+    await message.answer("Let's create a request. Please enter the building name:")
 
 @dp.message(Request.building_name)
 async def building_name(message: types.Message, state: FSMContext):
@@ -56,6 +73,7 @@ async def photo(message: types.Message, state: FSMContext):
     data = await state.get_data()
     await api_client.create_request(data)
     await message.answer("Request created")
+    await state.clear()
     
 
 async def main():
