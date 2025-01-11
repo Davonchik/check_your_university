@@ -1,6 +1,8 @@
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from src.logger import logger
 
+logger.info("Connecting to database...")
 engine = create_async_engine("postgresql+asyncpg://postgres:postgres@database_container:5432/postgres")
 async_session_maker = async_sessionmaker(engine, class_=AsyncSession)
 
