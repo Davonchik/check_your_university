@@ -21,7 +21,8 @@ class AdminService(IAdminService):
     async def refresh_token(self, refresh_token: str) -> str:
         logger.info("Update Token try")
         try:
-            email = await TokenService.decode_refresh_token(refresh_token)["sub"]
+            payload = await TokenService.decode_refresh_token(refresh_token)
+            email = payload['sub']
             # добавить проверку refresh_token
             access_token = await TokenService.create_access_token(email)
             refresh_token = await TokenService.create_refresh_token(email)
