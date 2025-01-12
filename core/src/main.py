@@ -2,10 +2,12 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from src.presentation.api.middleware import AuthMiddleware
 
 from src.presentation.api.request import router_request
 from src.presentation.api.user import router_user
 from src.presentation.api.admin import router_admin
+from src.presentation.api.admin_actions import router_admin_actions
 
 from src.logger import logger
 
@@ -23,6 +25,7 @@ app = FastAPI(title='Test', description='Test API', version='1.0.0', lifespan=li
 app.include_router(router_request)
 app.include_router(router_user)
 app.include_router(router_admin)
+app.include_router(router_admin_actions)
 
 app.add_middleware(
     CORSMiddleware,
@@ -30,6 +33,13 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=['*'],
     allow_headers=['*'],
+)
+
+app.add_middleware(
+    AuthMiddleware,
+    prefixes=[
+        router_admin_actions.prefix
+    ]
 )
 
 @app.get("/")

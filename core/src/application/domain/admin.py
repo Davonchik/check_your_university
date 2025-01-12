@@ -8,3 +8,7 @@ class AdminResponse(BaseModel):
     email: str
     access_token: str
     refresh_token: str
+
+class StatusUpdate(BaseModel):
+    id: str
+    status: str

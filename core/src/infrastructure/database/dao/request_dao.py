@@ -26,6 +26,17 @@ class RequestDao(IRequestDao):
             logger.error(f"Exception in get requests: {e}")
             raise
     
+    async def get_request_by_id(self, request_id: int) -> Request:
+        logger.info("Get request by id try")
+        try:
+            query = select(Request).where(Request.id == request_id)
+            result = await self.session.execute(query)
+            return result.scalar_one_or_none()
+        except Exception as e:
+            logger.error(f"Exception in get request by id: {e}")
+            raise
+
+
     async def update_request(self, request_id: int, request_in: RequestCreate) -> Request:
         logger.info("Update request try")
         try:
