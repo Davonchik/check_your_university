@@ -7,12 +7,16 @@ from src.presentation.api.request import router_request
 from src.presentation.api.user import router_user
 from src.presentation.api.admin import router_admin
 
+from src.logger import logger
+
+
+
 
 @asynccontextmanager
 async def lifespan(_):
-    print('start')
+    logger.info("Приложение запускается...")
     yield
-    print('stop')
+    logger.info("Приложение остановлено")
 
 
 app = FastAPI(title='Test', description='Test API', version='1.0.0', lifespan=lifespan)
@@ -28,7 +32,7 @@ app.add_middleware(
     allow_headers=['*'],
 )
 
-
 @app.get("/")
 async def root():
+    logger.info("Обработан запрос на корневой маршрут")
     return {"message": "root"}

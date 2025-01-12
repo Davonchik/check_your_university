@@ -10,36 +10,31 @@ from src.application.contracts.i_request_service import IRequestService
 from src.application.contracts.i_user_service import IUserService
 from src.application.contracts.i_admin_service import IAdminService
 from fastapi import Depends
+from sqlalchemy.ext.asyncio import AsyncSession
 
-def session_factory():
+async def session_factory():
     session = async_session_maker()
     try:
-        return session
+        yield session
     finally:
-        session.close()
+        await session.close()
 
-async def request_dao_factory():
-    session = session_factory()
+async def request_dao_factory(session: AsyncSession = Depends(session_factory)):
     return RequestDao(session)
 
-async def request_service_factory():
-    dao = await request_dao_factory()
+async def request_service_factory(dao: RequestDao = Depends(request_dao_factory)):
     return RequestService(dao)
 
-async def user_dao_factory():
-    session = session_factory()
+async def user_dao_factory(session: AsyncSession = Depends(session_factory)):
     return UserDao(session)
 
-async def user_service_factory():
-    dao = await user_dao_factory()
+async def user_service_factory(dao: UserDao = Depends(user_dao_factory)):
     return UserService(dao)
 
-async def admin_dao_factory():
-    session = session_factory()
+async def admin_dao_factory(session: AsyncSession = Depends(session_factory)):
     return AdminDao(session)
 
-async def admin_service_factory():
-    dao = await admin_dao_factory()
+async def admin_service_factory(dao: AdminDao = Depends(admin_dao_factory)):
     return AdminService(dao)
 
 RequestServiceAnnotated = Annotated[IRequestService, Depends(request_service_factory)]
