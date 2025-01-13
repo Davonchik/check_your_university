@@ -32,7 +32,9 @@ class RequestService(IRequestService):
     async def update_request(self, request_id: int, request_in: RequestUpdate):
         logger.info("Update request try")
         try:
-            return await self.request_dao.update_request(request_id, request_in)
+            request = await self.request_dao.update_request(request_id, request_in)
+            self.kafka_producer.send_message(str(request.status))
+            return request
         except Exception as e:
             logger.error(f"Exception in update request: {e}")
             raise

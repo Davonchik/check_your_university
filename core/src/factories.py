@@ -11,6 +11,8 @@ from src.application.contracts.i_user_service import IUserService
 from src.application.contracts.i_admin_service import IAdminService
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
+from src.infrastructure.utils.kafka_producer import KafkaProducer
+from functools import lru_cache
 
 async def session_factory():
     session = async_session_maker()
@@ -19,11 +21,16 @@ async def session_factory():
     finally:
         await session.close()
 
+@lru_cache
+def kafka_producer_factory():
+    return KafkaProducer(broker="kafka:9092", topic="test")
+    
+
 async def request_dao_factory(session: AsyncSession = Depends(session_factory)):
     return RequestDao(session)
 
-async def request_service_factory(dao: RequestDao = Depends(request_dao_factory)):
-    return RequestService(dao)
+async def request_service_factory(dao: RequestDao = Depends(request_dao_factory), kafka_producer: KafkaProducer = Depends(kafka_producer_factory)):
+    return RequestService(dao, kafka_producer)
 
 async def user_dao_factory(session: AsyncSession = Depends(session_factory)):
     return UserDao(session)
