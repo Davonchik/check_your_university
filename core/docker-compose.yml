@@ -26,7 +26,7 @@ services:
       - ${APP_PORT}:${APP_PORT}
   notification_container:
     container_name: notification
-    build: ./notifications
+    build: .
     command: sh -c 'python notifications/kafka.py'
   zookeeper:
       image: confluentinc/cp-zookeeper:latest

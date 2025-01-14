@@ -2,6 +2,12 @@ import uuid
 from datetime import datetime, timedelta, timezone
 from typing import Dict
 import jwt
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+access_key = os.getenv("ACCESS_KEY")
+refresh_key = os.getenv("REFRESH_KEY")
 
 class TokenService:
 
@@ -13,13 +19,13 @@ class TokenService:
             'iat': datetime.now(timezone.utc),
             'exp': datetime.now(timezone.utc) + expire_delta
         }
-        token = jwt.encode(payload, "hbsduychisdjmlfij", algorithm="HS256")
+        token = jwt.encode(payload, access_key, algorithm="HS256")
         return token
 
     @staticmethod
     async def decode_access_token(token: str) -> Dict[str, str]:
         try:
-            payload = jwt.decode(token, "hbsduychisdjmlfij", algorithms=["HS256"])
+            payload = jwt.decode(token, access_key, algorithms=["HS256"])
             expire_time = datetime.fromtimestamp(payload['exp']).replace(tzinfo=timezone.utc)
             if expire_time < datetime.now(timezone.utc):
                 raise Exception("Token expired")
@@ -40,13 +46,13 @@ class TokenService:
             'iat': datetime.now(timezone.utc),
             'exp': datetime.now(timezone.utc) + expire_delta,
         }
-        token = jwt.encode(payload, "yhnfgfhsnkjcoppjbsh", algorithm="HS256")        
+        token = jwt.encode(payload, refresh_key, algorithm="HS256")        
         return token
 
     @staticmethod
     async def decode_refresh_token(token: str) -> Dict[str, str]:
         try:
-            payload = jwt.decode(token, "yhnfgfhsnkjcoppjbsh", algorithms=["HS256"])
+            payload = jwt.decode(token, refresh_key, algorithms=["HS256"])
             expire_time = datetime.fromtimestamp(payload['exp']).replace(tzinfo=timezone.utc)
             if expire_time < datetime.now(timezone.utc):
                 raise Exception("Token expired")
