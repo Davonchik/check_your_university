@@ -11,6 +11,6 @@ class APIClient:
     
     async def create_request(self, data: dict):
         async with aiohttp.ClientSession() as session:
-            data["user_id"] = 1
+            data["user_id"] = 2
             async with session.post(f"{self.base_url}/request", json=data) as response:
                 return await response.json()

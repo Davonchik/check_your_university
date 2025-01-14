@@ -7,4 +7,3 @@ class IUserDao(Dao, ABC):
     @abstractmethod
     async def create_user(self, user_in: UserCreate) -> User:
         raise NotImplementedError
-    
