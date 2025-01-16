@@ -8,6 +8,7 @@ class RequestService(IRequestService):
     async def create_request(self, request_in: RequestCreate):
         logger.info("Create request try")
         try:
+            request_in.user_id = await self.user_dao.get_id_by_tg_id(str(request_in.user_id))
             return await self.request_dao.create_request(request_in)
         except Exception as e:
             logger.error(f"Exception in create request: {e}")

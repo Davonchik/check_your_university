@@ -100,6 +100,7 @@ async def text(message: types.Message, state: FSMContext):
 async def photo(message: types.Message, state: FSMContext):
     await state.update_data(photo_url=message.text)
     data = await state.get_data()
+    data["user_id"] = message.from_user.id
     await api_client.create_request(data)
     await message.answer("Request created")
     #logger.info("Photo: %s", message.text)

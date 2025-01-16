@@ -8,6 +8,6 @@ from typing import List
 class User(Base):
     __tablename__="user"
     id: Mapped[int]=mapped_column(INTEGER, primary_key=True)
-    tg_id: Mapped[str]=mapped_column(VARCHAR, nullable=True)
+    tg_id: Mapped[str]=mapped_column(VARCHAR, nullable=True, unique=True)
     created_at: Mapped[datetime]=mapped_column(DATE, default=datetime.now())
     request: Mapped[List["Request"]] = relationship("Request", back_populates="user")
