@@ -6,7 +6,7 @@ class RequestCreate(BaseModel):
     category: str
     room: str
     text: str
-    photo_url: str
+
 
 
 class RequestUpdate(BaseModel):

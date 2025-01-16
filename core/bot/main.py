@@ -8,6 +8,8 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 from keyboards.reply_keyboards import main_keyboard
 from keyboards.inline_keyboards import category_keyboard
+from io import BytesIO
+from aiogram.types import ContentType
 #from ..logger import logger
 
 
@@ -96,12 +98,18 @@ async def text(message: types.Message, state: FSMContext):
     await message.answer("Enter photo url")
     #logger.info("Text: %s", message.text)
 
-@dp.message(Request.photo)
+@dp.message(F.content_type == ContentType.PHOTO, Request.photo)
 async def photo(message: types.Message, state: FSMContext):
-    await state.update_data(photo_url=message.text)
+    photo = message.photo[-1]
+    bot = message.bot
+    file = await bot.get_file(photo.file_id)
+    file_data = await bot.download_file(file.file_path)
+    file_data.name = f"{photo.file_id}.jpg"
+    print(file_data)
+    await state.update_data(photo_url=file_data)
     data = await state.get_data()
     data["user_id"] = message.from_user.id
-    await api_client.create_request(data)
+    await api_client.create_request(data, file_data)
     await message.answer("Request created")
     #logger.info("Photo: %s", message.text)
     await state.clear()
