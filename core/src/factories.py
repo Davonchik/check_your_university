@@ -13,6 +13,7 @@ from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.infrastructure.utils.kafka_producer import KafkaProducer
 from functools import lru_cache
+from src.infrastructure.utils.s3_client import S3BucketService
 
 async def session_factory():
     session = async_session_maker()
@@ -24,7 +25,14 @@ async def session_factory():
 @lru_cache
 def kafka_producer_factory():
     return KafkaProducer(broker="kafka:9092", topic="test")
-    
+
+def s3_bucket_service_factory() -> S3BucketService:
+    return S3BucketService(
+        "test-bucket",
+        "http://minio:9000",
+        "USERNAME",
+        "PASSWORD",
+    )
 
 async def request_dao_factory(session: AsyncSession = Depends(session_factory)):
     return RequestDao(session)
@@ -47,3 +55,4 @@ async def admin_service_factory(dao: AdminDao = Depends(admin_dao_factory)):
 RequestServiceAnnotated = Annotated[IRequestService, Depends(request_service_factory)]
 UserServiceAnnotated = Annotated[IUserService, Depends(user_service_factory)]
 AdminServiceAnnotated = Annotated[IAdminService, Depends(admin_service_factory)]
+S3BucketServiceAnnotated = Annotated[S3BucketService, Depends(s3_bucket_service_factory)]

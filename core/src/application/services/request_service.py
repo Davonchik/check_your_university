@@ -33,7 +33,8 @@ class RequestService(IRequestService):
         logger.info("Update request try")
         try:
             request = await self.request_dao.update_request(request_id, request_in)
-            self.kafka_producer.send_message(str(request.status))
+            print(request.user)
+            self.kafka_producer.send_message(str(request.user.tg_id) + ' ' + str(request.status))
             return request
         except Exception as e:
             logger.error(f"Exception in update request: {e}")

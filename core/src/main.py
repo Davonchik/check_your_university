@@ -8,6 +8,7 @@ from src.presentation.api.request import router_request
 from src.presentation.api.user import router_user
 from src.presentation.api.admin import router_admin
 from src.presentation.api.admin_actions import router_admin_actions
+from check_your_university.core.src.presentation.api.s3 import s3_router
 
 from src.logger import logger
 
@@ -26,6 +27,7 @@ app.include_router(router_request)
 app.include_router(router_user)
 app.include_router(router_admin)
 app.include_router(router_admin_actions)
+app.include_router(s3_router)
 
 app.add_middleware(
     CORSMiddleware,

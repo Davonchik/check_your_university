@@ -15,3 +15,4 @@ class UserDao(IUserDao):
         except Exception as e:
             logger.error(f"Exception in create user: {e}")
             raise
+  

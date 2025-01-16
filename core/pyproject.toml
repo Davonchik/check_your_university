@@ -23,6 +23,8 @@ anyio = "^4.8.0"
 pytest-asyncio = "^0.25.2"
 confluent-kafka = "^2.8.0"
 passlib = "^1.7.4"
+boto3 = "^1.35.98"
+python-multipart = "^0.0.20"
 
 
 [build-system]

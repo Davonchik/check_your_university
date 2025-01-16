@@ -19,4 +19,4 @@ class Request(Base):
     status: Mapped[str]=mapped_column(VARCHAR, nullable=True, default="pending")
     created_at: Mapped[datetime]=mapped_column(DATE, default=datetime.now())
     updated_at: Mapped[datetime]=mapped_column(DATE, default=datetime.now())
-    user: Mapped["User"] = relationship("User", back_populates="request")
+    user: Mapped["User"] = relationship("User", back_populates="request", lazy = "selectin")
