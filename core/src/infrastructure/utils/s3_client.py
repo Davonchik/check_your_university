@@ -66,4 +66,18 @@ class S3BucketService:
         client = self.create_s3_client()
         path_to_file = str(Path(prefix, source_file_name))
         client.delete_object(Bucket=self.bucket_name, Key=path_to_file)
+
+    def generate_url(self, prefix: str, source_file_name: str) -> Optional[str]:
+        client = self.create_s3_client()
+        path_to_file = str(Path(prefix, source_file_name))
+        try:
+            response = client.generate_presigned_url(
+                "get_object",
+                Params={"Bucket": self.bucket_name, "Key": path_to_file},
+                ExpiresIn=3600,
+            )
+            return response
+        except ClientError as e:
+            print(e)
+            return None
         
