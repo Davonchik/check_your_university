@@ -40,14 +40,16 @@ def s3_bucket_service_factory() -> S3BucketService:
 async def s3_dao_factory(session: AsyncSession = Depends(session_factory)):
     return S3Dao(session)
 
-async def s3_service_factory(dao: S3Dao = Depends(s3_dao_factory), s3_bucket_service: S3BucketService = Depends(s3_bucket_service_factory)):
-    return S3Service(dao, s3_bucket_service)
+async def user_dao_factory(session: AsyncSession = Depends(session_factory)):
+    return UserDao(session)
+
+async def s3_service_factory(dao: S3Dao = Depends(s3_dao_factory), s3_bucket_service: S3BucketService = Depends(s3_bucket_service_factory), user_dao: UserDao = Depends(user_dao_factory)):
+    return S3Service(dao, s3_bucket_service, user_dao)
 
 async def request_dao_factory(session: AsyncSession = Depends(session_factory)):
     return RequestDao(session)
 
-async def user_dao_factory(session: AsyncSession = Depends(session_factory)):
-    return UserDao(session)
+
 
 async def request_service_factory(dao: RequestDao = Depends(request_dao_factory), kafka_producer: KafkaProducer = Depends(kafka_producer_factory), user_dao: UserDao = Depends(user_dao_factory)):
     return RequestService(dao, kafka_producer, user_dao)

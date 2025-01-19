@@ -1,4 +1,3 @@
-from jwt import PyJWTError
 from starlette.middleware.base import BaseHTTPMiddleware
 from fastapi import Request
 from src.infrastructure.utils.token_service import TokenService
@@ -29,7 +28,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
             payload = await TokenService.decode_access_token(token=x_auth_token)
             request.state.user = payload
 
-        except PyJWTError:
+        except Exception:
             raise Exception('Invalid X-Auth-Token')
 
         response = await call_next(request)

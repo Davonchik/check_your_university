@@ -11,3 +11,4 @@ class User(Base):
     tg_id: Mapped[str]=mapped_column(VARCHAR, nullable=True, unique=True)
     created_at: Mapped[datetime]=mapped_column(DATE, default=datetime.now())
     request: Mapped[List["Request"]] = relationship("Request", back_populates="user")
+    s3: Mapped[List["S3"]] = relationship("S3", back_populates="user")

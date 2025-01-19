@@ -5,9 +5,9 @@ class S3Service(IS3Service):
     async def create_file(self, user_id: int, file_name: str, file_content):
         logger.info("Create user try")
         try:
-            print(self.s3_service.generate_url("image_report", file_name))
-            file_url = self.s3_service.generate_url("image_report", file_name)
+            user_id = await self.user_dao.get_id_by_tg_id(str(user_id))
             self.s3_service.upload_file_object("image_report", file_name, file_content)
+            file_url = self.s3_service.generate_url("image_report", file_name)
             return await self.s3_dao.create_file(user_id, file_name, file_url)
         except Exception as e:
             logger.error(f"Exception in create user: {e}")
