@@ -30,3 +30,12 @@ class AdminService(IAdminService):
         except Exception as e:
             logger.error(f"Exception in update token: {e}")
             raise
+
+    async def create_building(self, name: str):
+        logger.info("Create building try")
+        return await self.building_dao.create_building(name=name)
+
+    
+    async def delete_building(self, id: int):
+        logger.info("Delete building try")
+        return await self.building_dao.delete_building(id=id)

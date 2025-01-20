@@ -3,6 +3,7 @@ from src.infrastructure.database.dao.request_dao import RequestDao
 from src.infrastructure.database.dao.user_dao import UserDao
 from src.infrastructure.database.dao.admin_dao import AdminDao
 from src.infrastructure.database.dao.s3_dao import S3Dao
+from src.infrastructure.database.dao.building_dao import BuildingDao
 from src.application.services.request_service import RequestService
 from src.application.services.user_service import UserService
 from src.application.services.admin_service import AdminService
@@ -49,10 +50,12 @@ async def s3_service_factory(dao: S3Dao = Depends(s3_dao_factory), s3_bucket_ser
 async def request_dao_factory(session: AsyncSession = Depends(session_factory)):
     return RequestDao(session)
 
+async def building_dao_factory(session: AsyncSession = Depends(session_factory)):
+    return BuildingDao(session)
 
-
-async def request_service_factory(dao: RequestDao = Depends(request_dao_factory), kafka_producer: KafkaProducer = Depends(kafka_producer_factory), user_dao: UserDao = Depends(user_dao_factory)):
-    return RequestService(dao, kafka_producer, user_dao)
+async def request_service_factory(dao: RequestDao = Depends(request_dao_factory), kafka_producer: KafkaProducer = Depends(kafka_producer_factory), 
+                                  user_dao: UserDao = Depends(user_dao_factory), building_dao: BuildingDao = Depends(building_dao_factory)):
+    return RequestService(dao, kafka_producer, user_dao, building_dao)
 
 async def user_service_factory(dao: UserDao = Depends(user_dao_factory)):
     return UserService(dao)
@@ -60,8 +63,8 @@ async def user_service_factory(dao: UserDao = Depends(user_dao_factory)):
 async def admin_dao_factory(session: AsyncSession = Depends(session_factory)):
     return AdminDao(session)
 
-async def admin_service_factory(dao: AdminDao = Depends(admin_dao_factory)):
-    return AdminService(dao)
+async def admin_service_factory(dao: AdminDao = Depends(admin_dao_factory), building_dao: BuildingDao = Depends(building_dao_factory)):
+    return AdminService(dao, building_dao)
 
 RequestServiceAnnotated = Annotated[IRequestService, Depends(request_service_factory)]
 UserServiceAnnotated = Annotated[IUserService, Depends(user_service_factory)]

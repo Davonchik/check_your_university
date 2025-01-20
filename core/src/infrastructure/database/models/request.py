@@ -11,7 +11,7 @@ class Request(Base):
     __tablename__="request"
     id: Mapped[int]=mapped_column(INTEGER, primary_key=True)
     user_id: Mapped[int]=mapped_column(ForeignKey("user.id"))
-    building_name: Mapped[str]=mapped_column(VARCHAR, nullable=True)
+    building_id: Mapped[int]=mapped_column(ForeignKey("building.id"))
     category: Mapped[str]=mapped_column(VARCHAR, nullable=True)
     room: Mapped[str]=mapped_column(VARCHAR, nullable=True)
     text: Mapped[str]=mapped_column(TEXT, nullable=True)
@@ -20,3 +20,5 @@ class Request(Base):
     created_at: Mapped[datetime]=mapped_column(DATE, default=datetime.now())
     updated_at: Mapped[datetime]=mapped_column(DATE, default=datetime.now())
     user: Mapped["User"] = relationship("User", back_populates="request", lazy = "selectin")
+    building: Mapped["Building"] = relationship("Building", back_populates="request", lazy = "selectin")
+    

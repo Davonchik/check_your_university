@@ -9,6 +9,7 @@ from src.infrastructure.database.models.user import User
 from src.infrastructure.database.models.request import Request
 from src.infrastructure.database.models.admin import Admin
 from src.infrastructure.database.models.s3 import S3
+from src.infrastructure.database.models.building import Building
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

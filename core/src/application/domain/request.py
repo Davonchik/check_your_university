@@ -7,7 +7,12 @@ class RequestCreate(BaseModel):
     room: str
     text: str
 
-
+class RequestDto(BaseModel):
+    user_id: int
+    building_id: int
+    category: str
+    room: str
+    text: str
 
 class RequestUpdate(BaseModel):
     status: str

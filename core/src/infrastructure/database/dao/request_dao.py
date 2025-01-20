@@ -21,7 +21,8 @@ class RequestDao(IRequestDao):
     async def get_requests(self) -> list[Request]:
         logger.info("Get requests try")
         try:
-            return await self.session.query(Request).all()
+            query = await self.session.execute(select(Request))
+            return query.scalars().all()
         except Exception as e:
             logger.error(f"Exception in get requests: {e}")
             raise
