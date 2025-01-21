@@ -20,3 +20,8 @@ async def create_new_request(
     read_file = await file.read()
     await s3.create_file(user_id, file.filename, read_file)
     return await service.create_request(RequestCreate(user_id=user_id, building_name=building_name, category=category, room=room, text=text))
+
+
+@router_request.get('/get-statistics')
+async def get_statistics(service: RequestServiceAnnotated):
+    return await service.get_statistics()

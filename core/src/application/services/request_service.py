@@ -32,6 +32,10 @@ class RequestService(IRequestService):
             logger.error(f"Exception in get requests: {e}")
             raise
 
+    async def get_statistics(self):
+        logger.info("Get statistics")
+        return await self.request_dao.get_statistics()
+
     async def get_request_by_id(self, request_id: int):
         logger.info("Get request by id try")
         try:

@@ -4,6 +4,8 @@ from src.application.abstractions.dao.i_request_dao import IRequestDao
 from sqlalchemy.future import select
 from sqlalchemy.exc import NoResultFound
 from src.logger import logger
+from sqlalchemy import func
+
 
 class RequestDao(IRequestDao):
     async def create_request(self, request_in: RequestCreate) -> Request:
@@ -26,6 +28,17 @@ class RequestDao(IRequestDao):
         except Exception as e:
             logger.error(f"Exception in get requests: {e}")
             raise
+
+    async def get_statistics(self) -> tuple[int, int]:
+        logger.info('Get statistics')
+        query_all = await self.session.execute(select(func.count()).select_from(Request))
+        all_requests_cnt = query_all.scalar()
+
+        query_done = await self.session.execute(
+            select(func.count()).select_from(Request).where(Request.status == 'done'))
+        done_requests_cnt = query_done.scalar()
+
+        return all_requests_cnt, done_requests_cnt
     
     async def get_request_by_id(self, request_id: int) -> Request:
         logger.info("Get request by id try")
