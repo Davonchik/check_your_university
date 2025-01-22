@@ -32,7 +32,7 @@ async def start(message: types.Message):
     #await state.set_state(Request.building_name)
     print(user)
     await message.answer(
-        "Hello, I'm a bot! Choose an option below:", 
+        "Вас приветсвует сервис отслеживания состояний помещений НИУ ВШЭ!\nНиже (в виде кнопок) представлен список действий, которые вы можете выполнить: ", 
         reply_markup=main_keyboard
     )
 
@@ -41,20 +41,21 @@ async def about_us(message: types.Message):
     #logger.info("About us")
     # Отправляем текст о компании
     await message.answer(
-        "We are a company that values innovation and quality. "
-        "Our mission is to provide the best services for our clients."
+        "Это сервис предоставления заявок на устранение неполадок в помещениях."
+        "Наша основная цель состоит в том, чтобы помочь пользователям легко и быстро создать заявку на устранение неполадок в помещениях ВУЗа."
+        "Связаться с нами вы можете через тг: @daslanian, @vastarchenkov"
     )
 
 @dp.message(lambda message: message.text == "Create a request")
 async def create_request(message: types.Message, state: FSMContext):
     #logger.info("Create request")
     await state.set_state(Request.building_name)
-    await message.answer("Let's create a request. Please enter the building name:")
+    await message.answer("Начинаем заполнение заявки! Выберите название корпуса:")
 
 @dp.message(Request.building_name)
 async def building_name(message: types.Message, state: FSMContext):
     await state.update_data(building_name=message.text)
-    await message.answer("Choose category", reply_markup=category_keyboard)
+    await message.answer("Выберите категорию:", reply_markup=category_keyboard)
     await state.set_state(Request.wait_category)
     #logger.info("Building name: %s", message.text)
 
@@ -80,22 +81,22 @@ async def category(callback_query: types.CallbackQuery, state: FSMContext):
     category_name = category_map[callback_query.data]
     await state.update_data(category=category_name)
     await state.set_state(Request.room)
-    await callback_query.message.edit_text(f"Selected category: {category_name}")
-    await callback_query.message.answer("Enter room")
+    await callback_query.message.edit_text(f"Выбранная вами категория: {category_name}")
+    await callback_query.message.answer("Введите номер помещения:")
     # logger.info("Category: %s", callback_query.data)
 
 @dp.message(Request.room)
 async def room(message: types.Message, state: FSMContext):
     await state.update_data(room=message.text)
     await state.set_state(Request.text)
-    await message.answer("Enter text")
+    await message.answer("Опишите проблему подробно в виде текста:")
     #logger.info("Room: %s", message.text)
 
 @dp.message(Request.text)
 async def text(message: types.Message, state: FSMContext):
     await state.update_data(text=message.text)
     await state.set_state(Request.photo)
-    await message.answer("Enter photo url")
+    await message.answer("Отправьте фото подтверждение проблемы:")
     #logger.info("Text: %s", message.text)
 
 @dp.message(F.content_type == ContentType.PHOTO, Request.photo)
@@ -110,7 +111,7 @@ async def photo(message: types.Message, state: FSMContext):
     data = await state.get_data()
     data["user_id"] = message.from_user.id
     await api_client.create_request(data, file_data)
-    await message.answer("Request created")
+    await message.answer("Заявка создана! Ожидайте ответа от администратора. После решения проблемы вам поступит актуальный статус решения.")
     #logger.info("Photo: %s", message.text)
     await state.clear()
     
