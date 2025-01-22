@@ -34,3 +34,7 @@ class IRequestService(Service, ABC):
     async def update_request(self, request_id: int, request_in: RequestUpdate):
         raise NotImplementedError
     
+    @abstractmethod
+    async def filter_by_building(self, building_name: str):
+        raise NotImplementedError
+    

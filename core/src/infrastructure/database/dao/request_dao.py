@@ -1,5 +1,6 @@
 from src.application.domain.request import RequestCreate
 from src.infrastructure.database.models.request import Request
+from src.infrastructure.database.models.building import Building
 from src.application.abstractions.dao.i_request_dao import IRequestDao
 from sqlalchemy.future import select
 from sqlalchemy.exc import NoResultFound
@@ -70,5 +71,19 @@ class RequestDao(IRequestDao):
         except Exception as e:
             logger.error(f"Exception in update request: {e}")
             raise
-    
+
+    async def filter_by_building(self, building_name: str) -> list[Request]:
+        logger.info(f"Filter requests by building_name: {building_name}")
+        try:
+            # Выполняем JOIN с таблицей Building и фильтруем по имени здания
+            query = (
+                select(Request)
+                .join(Request.building)
+                .where(Building.name == building_name)
+            )
+            result = await self.session.execute(query)
+            return result.scalars().all()
+        except Exception as e:
+            logger.error(f"Exception in filter_by_building_name: {e}")
+            raise
     

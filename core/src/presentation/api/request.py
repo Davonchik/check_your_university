@@ -25,3 +25,7 @@ async def create_new_request(
 @router_request.get('/get-statistics')
 async def get_statistics(service: RequestServiceAnnotated):
     return await service.get_statistics()
+
+@router_request.get('/filter-by-building')
+async def filter_by_building(service: RequestServiceAnnotated, building_name: str):
+    return await service.filter_by_building(building_name)

@@ -54,3 +54,8 @@ class RequestService(IRequestService):
         except Exception as e:
             logger.error(f"Exception in update request: {e}")
             raise
+
+    async def filter_by_building(self, building_name: str):
+        logger.info("Filter by building")
+        return await self.request_dao.filter_by_building(building_name)
+        
