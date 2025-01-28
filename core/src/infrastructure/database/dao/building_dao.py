@@ -49,3 +49,12 @@ class BuildingDao(IBuildingDao):
         except Exception as e:
             logger.error(e)
             raise
+
+    async def get_buildings(self):
+        logger.info("Get buildings try")
+        try:
+            query = await self.session.execute(select(Building))
+            return query.scalars().all()
+        except Exception as e:
+            logger.error(e)
+            raise

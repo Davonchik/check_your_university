@@ -21,3 +21,8 @@ class APIClient:
             form_data.add_field("file", file1, filename=file1.name, content_type="image/octet-stream")
             async with session.post(f"{self.base_url}/request/", data=form_data, allow_redirects=False) as response:
                 print("test")
+
+    async def get_buildings(self):
+        async with aiohttp.ClientSession() as session:
+            async with session.get(f"{self.base_url}/user/get-buildings") as response:
+                return await response.json()

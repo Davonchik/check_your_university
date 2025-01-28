@@ -22,4 +22,3 @@ async def delete_building(id: int, service: AdminServiceAnnotated, _: TokenAnnot
 async def get_requests(service: RequestServiceAnnotated, _: TokenAnnotated):
     requests = await service.get_requests()
     return requests
-

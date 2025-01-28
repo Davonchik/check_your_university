@@ -21,3 +21,8 @@ class IAdminService(Service, ABC):
     @abstractmethod
     async def delete_building(self, id: int):
         raise NotImplementedError
+    
+    @abstractmethod
+    async def get_buildings(self):
+        raise NotImplementedError
+    

@@ -39,3 +39,7 @@ class AdminService(IAdminService):
     async def delete_building(self, id: int):
         logger.info("Delete building try")
         return await self.building_dao.delete_building(id=id)
+    
+    async def get_buildings(self):
+        logger.info("Get buildings try")
+        return await self.building_dao.get_buildings()

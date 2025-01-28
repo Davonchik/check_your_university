@@ -7,7 +7,7 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 from keyboards.reply_keyboards import main_keyboard
-from keyboards.inline_keyboards import category_keyboard
+from keyboards.inline_keyboards import category_keyboard, get_unique_building_names_keyboard
 from io import BytesIO
 from aiogram.types import ContentType
 #from ..logger import logger
@@ -50,12 +50,13 @@ async def about_us(message: types.Message):
 async def create_request(message: types.Message, state: FSMContext):
     #logger.info("Create request")
     await state.set_state(Request.building_name)
-    await message.answer("Начинаем заполнение заявки! Выберите название корпуса:")
+    kb = await get_unique_building_names_keyboard()
+    await message.answer("Начинаем заполнение заявки! Выберите название корпуса:", reply_markup=kb)
 
-@dp.message(Request.building_name)
-async def building_name(message: types.Message, state: FSMContext):
-    await state.update_data(building_name=message.text)
-    await message.answer("Выберите категорию:", reply_markup=category_keyboard)
+@dp.callback_query(Request.building_name)
+async def building_name(call: types.CallbackQuery, state: FSMContext):
+    await state.update_data(building_name=call.data)
+    await call.message.answer("Выберите категорию:", reply_markup=category_keyboard)
     await state.set_state(Request.wait_category)
     #logger.info("Building name: %s", message.text)
 
@@ -109,6 +110,7 @@ async def photo(message: types.Message, state: FSMContext):
     print(file_data)
     await state.update_data(photo_url=file_data)
     data = await state.get_data()
+    print(data)
     data["user_id"] = message.from_user.id
     await api_client.create_request(data, file_data)
     await message.answer("Заявка создана! Ожидайте ответа от администратора. После решения проблемы вам поступит актуальный статус решения.")

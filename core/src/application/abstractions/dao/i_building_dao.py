@@ -17,3 +17,7 @@ class IBuildingDao(Dao, ABC):
     @abstractmethod
     async def get_id_by_name(self, name: str):
         raise NotImplementedError
+    
+    @abstractmethod
+    async def get_buildings(self):
+        raise NotImplementedError
