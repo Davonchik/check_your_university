@@ -68,4 +68,24 @@ services:
       MINIO_ROOT_PASSWORD: 'PASSWORD'
       MINIO_ADDRESS: ':9000'
       MINIO_CONSOLE_ADDRESS: ':9001'
-
+  test_database_container:
+    container_name: test_database
+    image: postgres:16.3-alpine3.20
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${TEST_DB_USER}
+      - POSTGRES_PASSWORD=${TEST_DB_PASS}
+      - POSTGRES_DB=${TEST_DB_NAME}
+    ports:
+      - "5433:5432"
+  tests:
+    container_name: tests
+    build: .
+    env_file:
+      - .env
+    depends_on:
+      - test_database_container
+    environment:
+      - PYTHONPATH=/core/src
+    command: sh -c 'sleep 5 && pytest'

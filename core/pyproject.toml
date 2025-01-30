@@ -24,6 +24,7 @@ confluent-kafka = "^2.8.0"
 passlib = "^1.7.4"
 boto3 = "^1.35.98"
 python-multipart = "^0.0.20"
+coverage = "^7.6.10"
 
 
 [build-system]
