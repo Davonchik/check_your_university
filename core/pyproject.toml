@@ -25,6 +25,9 @@ passlib = "^1.7.4"
 boto3 = "^1.35.98"
 python-multipart = "^0.0.20"
 coverage = "^7.6.10"
+aiosqlite = "^0.21.0"
+httpx = "^0.28.1"
+pytest-mock = "^3.14.0"
 
 
 [build-system]

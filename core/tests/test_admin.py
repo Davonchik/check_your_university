@@ -12,7 +12,7 @@ from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.orm import sessionmaker
 import pytest_asyncio
 
-test_database_url = "postgresql+asyncpg://test:test@test_database_container:5432/test"
+test_database_url = "sqlite+aiosqlite:///:memory:"
 
 @pytest_asyncio.fixture()
 async def session():

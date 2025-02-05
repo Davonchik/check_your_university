@@ -3,11 +3,12 @@ from src.factories import session_factory
 from src.infrastructure.database.database import Base
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import Depends
+from src.infrastructure.database.dao.user_dao import UserDao
 from src.infrastructure.database.dao.admin_dao import AdminDao
 from src.infrastructure.database.dao.building_dao import BuildingDao
 from src.infrastructure.database.dao.request_dao import RequestDao
 from src.application.domain.user import UserCreate
-from src.application.domain.request import RequestCreate
+from src.application.domain.request import RequestCreate, RequestDto
 from src.infrastructure.database.models.request import Request
 from src.infrastructure.database.models.user import User
 from src.infrastructure.database.models.admin import Admin
@@ -17,7 +18,7 @@ from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.orm import sessionmaker
 import pytest_asyncio
 
-test_database_url = "postgresql+asyncpg://test:test@test_database_container:5432/test"
+test_database_url = "sqlite+aiosqlite:///:memory:"
 
 @pytest_asyncio.fixture()
 async def session():
@@ -35,6 +36,9 @@ async def session():
 @pytest.mark.asyncio
 async def test_create_request(session: AsyncSession):
     dao = RequestDao(session)
+    user_dao = UserDao(session)
+    building_dao = BuildingDao(session)
+
     user = User(tg_id="123user")
     building = Building(name="pokra")
     session.add(user)
@@ -42,6 +46,7 @@ async def test_create_request(session: AsyncSession):
     await session.commit()
     await session.refresh(user)
     await session.refresh(building)
+
     request_in = RequestCreate(
         user_id=user.id,
         building_name="pokra",
@@ -49,7 +54,12 @@ async def test_create_request(session: AsyncSession):
         room="test",
         text="test"
     )
-    req = await dao.create_request(request_in)
+    
+    building_id = await building_dao.get_id_by_name(request_in.building_name)
+    dto = RequestDto(user_id=request_in.user_id, building_id=building_id, 
+                        category=request_in.category, room=request_in.room, text=request_in.text)
+    
+    req = await dao.create_request(dto)
     assert req.user_id == user.id
 
 # @pytest.mark.asyncio
