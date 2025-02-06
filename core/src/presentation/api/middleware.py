@@ -10,6 +10,8 @@ class AuthMiddleware(BaseHTTPMiddleware):
         self.prefixes = prefixes
 
     async def dispatch(self, request: Request, call_next):
+        if request.method == "OPTIONS":
+            return await call_next(request)
 
         if request.url.path in ['/docs', '/openapi.json', '/redoc']:
             response = await call_next(request)
