@@ -1,18 +1,26 @@
 import pytest
 from fastapi.testclient import TestClient
 from src.main import app
-from unittest.mock import MagicMock
-from sqlalchemy.orm import Session
+from src.application.services.admin_service import AdminService
+from src.factories import admin_service_factory
+from src.infrastructure.database.models.building import Building
+
 
 client = TestClient(app)
 
-def test_user(mocker):
-    mock_db = mocker.MagicMock(spec=Session)
-    mock_building = MagicMock()
-    mock_building.name = "pokra"
-    mock_building.id = 1
-    mock_db.query.return_value.filter.return_value.first.return_value = mock_building
-    mocker.patch("src.factories.session_factory", return_value=mock_db)
+@pytest.mark.asyncio
+async def test_user(mocker):
+    mock_service = mocker.MagicMock(spec=AdminService)
+    mock_service.get_buildings.return_value = [
+        Building(id = 1, name="pokra"),
+        Building(id = 2, name="test"),
+    ]
+
+    app.dependency_overrides[admin_service_factory] = lambda: mock_service
+    
     response = client.get("/user/get-buildings")
+
+    app.dependency_overrides.clear()
+
     assert response.status_code == 200
-    assert response.json() == []
+    assert response.json() == ["pokra", "test"]
