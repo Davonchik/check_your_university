@@ -12,7 +12,8 @@ async def update_request(request_id: int, request_in: RequestUpdate, service: Re
 
 @router_admin_actions.post('/create-building')
 async def create_building(name: str, service: AdminServiceAnnotated, _: TokenAnnotated):
-    return await service.create_building(name=name)
+    req = await service.create_building(name=name)
+    return {"id": req.id, "name": req.name}
 
 @router_admin_actions.post('/delete-building')
 async def delete_building(id: int, service: AdminServiceAnnotated, _: TokenAnnotated):
