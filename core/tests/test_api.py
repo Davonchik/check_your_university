@@ -174,3 +174,30 @@ async def test_create_building(mocker):
 
     assert response.status_code == 200
     assert response.json() == {"id": 1, "name": "test"}
+
+@pytest.mark.asyncio
+async def test_delete_building(mocker):
+    mock_service = mocker.MagicMock(spec=AdminService)
+    building = Building(
+        id = 1,
+        name = 'test'
+    )
+    mock_service.delete_building.return_value = building
+
+    app.dependency_overrides[admin_service_factory] = lambda: mock_service
+
+    mocker.patch(
+        "src.infrastructure.utils.token_service.TokenService.decode_access_token",
+        return_value={"user_id": 1, "role": "admin"}
+    )
+
+    response = client.post(
+        "/admin_actions/delete-building",
+        headers={"X-Auth-Token": "test_token"},
+        params={"id": 1}
+    )
+
+    app.dependency_overrides.clear()
+
+    assert response.status_code == 200
+    assert response.json() == {"id": 1, "name": "test"}

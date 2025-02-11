@@ -25,7 +25,6 @@ class BuildingDao(IBuildingDao):
         except Exception as e:
             logger.error(f"Exception in create building: {e}")
             raise
-        
     
     
     async def delete_building(self, id: int):
