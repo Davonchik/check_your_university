@@ -39,7 +39,7 @@ class KafkaConsumer:
         tg_id, status = self.parse_message(message)
         bot = Bot(token='7999109509:AAHWr1xadrAoA1IthlhNjnJzOMQ0XKho7Qo')
         chat_id = tg_id
-        text = f"Request status: {status}"
+        text = f"Статус вашей заявки: {status}"
         await bot.send_message(chat_id, text)
 
 if __name__ == "__main__":
