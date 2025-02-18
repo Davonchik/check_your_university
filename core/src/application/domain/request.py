@@ -15,6 +15,7 @@ class RequestDto(BaseModel):
     text: str
 
 class RequestUpdate(BaseModel):
+    request_id: int
     status: str
 
 class RequestOut(BaseModel):
