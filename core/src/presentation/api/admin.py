@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from src.application.domain.admin import AuthAdmin, AdminResponse
 from src.factories import AdminServiceAnnotated
-from src.factories import TokenAnnotated
+from src.application.domain.annotated import TokenAnnotated
 
 router_admin = APIRouter(prefix="/admin", tags=["admins"])
 
