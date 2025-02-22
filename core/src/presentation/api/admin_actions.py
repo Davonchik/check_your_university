@@ -5,7 +5,7 @@ from src.application.domain.annotated import TokenAnnotated
 
 router_admin_actions = APIRouter(prefix="/admin_actions", tags=["actions"])
 
-@router_admin_actions.post('/update', response_model=RequestUpdate)
+@router_admin_actions.post('/update')
 async def update_request(request_in: RequestUpdate, service: RequestServiceAnnotated, _: TokenAnnotated):
     return await service.update_request(request_in.request_id, request_in)
 

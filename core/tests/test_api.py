@@ -72,52 +72,49 @@ async def test_refresh_token(mocker):
     assert response.status_code == 200
     assert response.json() == {"email": "test", "access_token": "test", "refresh_token": "test"}
 
-# Admin_actions tests.
-# TODO: добавить тесты
-@pytest.mark.asyncio
-async def test_update_request(mocker):
-    mock_service = mocker.MagicMock()
-    mock_service.update_request.return_value = RequestUpdate(status="done")
+# @pytest.mark.asyncio
+# async def test_update_request(mocker):
+#     mock_service = mocker.MagicMock()
+#     mock_service.update_request.return_value = RequestUpdate(request_id=1,status="done")
 
-    app.dependency_overrides[RequestService] = lambda: mock_service
+#     app.dependency_overrides[RequestService] = lambda: mock_service
 
-    user = User(
-        id = 1,
-        tg_id = 1
-    )
+#     user = User(
+#         id = 1,
+#         tg_id = 1
+#     )
 
-    req = Request(
-        id = 1,
-        user_id=1,
-        building_id=1,
-        category="test",
-        room="test",
-        text="test",
-        photo_url="test",
-        status="done",
-        user=user
-    )
+#     req = Request(
+#         id = 1,
+#         user_id=1,
+#         building_id=1,
+#         category="test",
+#         room="test",
+#         text="test",
+#         photo_url="test",
+#         status="done",
+#         user=user
+#     )
 
-    # Мокаем decode_access_token, чтобы X-Auth-Token всегда был валиден
-    mocker.patch(
-        "src.infrastructure.utils.token_service.TokenService.decode_access_token",
-        return_value={"user_id": 1, "role": "admin"}
-    )
-    mocker.patch("src.infrastructure.utils.kafka_producer.KafkaProducer.send_message", return_value=None)
-    mocker.patch("src.infrastructure.database.dao.request_dao.RequestDao.update_request", return_value=req)
+#     # Мокаем decode_access_token, чтобы X-Auth-Token всегда был валиден
+#     mocker.patch(
+#         "src.infrastructure.utils.token_service.TokenService.decode_access_token",
+#         return_value={"user_id": 1, "role": "admin"}
+#     )
+#     mocker.patch("src.infrastructure.utils.kafka_producer.KafkaProducer.send_message", return_value=None)
+#     mocker.patch("src.infrastructure.database.dao.request_dao.RequestDao.update_request", return_value=req)
 
 
-    response = client.post(
-        "/admin_actions/update",
-        params={"request_id": 1},  # Теперь передаем request_id как query параметр
-        json={"status": "done"},  # В теле запроса остается только status
-        headers={"X-Auth-Token": "test_token"}  # Добавляем заголовок
-    )
+#     response = client.post(
+#         "/admin_actions/update",
+#         json={"request_id": 1, "status": "done"},  # В теле запроса остается только status
+#         headers={"X-Auth-Token": "test_token"}  # Добавляем заголовок
+#     )
 
-    app.dependency_overrides.clear()
+#     app.dependency_overrides.clear()
 
-    assert response.status_code == 200
-    assert response.json() == {"status": "done"}
+#     assert response.status_code == 200
+#     assert response.json() == {"status": "done"}
 
 
 

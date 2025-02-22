@@ -258,10 +258,10 @@ async def test_update_request():
     )
 
     # Мок входных данных для обновления
-    request_in = RequestUpdate(status="closed")
+    request_in = RequestUpdate(request_id=1, status="closed")
 
     # Act
-    result = await service.update_request(request_id=1, request_in=request_in)
+    result = await service.update_request(request_id=request_in.request_id, request_in=request_in)
 
     # Assert
     assert result == test_request

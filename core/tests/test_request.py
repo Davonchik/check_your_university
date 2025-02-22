@@ -94,7 +94,7 @@ async def test_update_request(session: AsyncSession):
     await session.refresh(mock_request)
 
     # Act
-    result = await request_dao.update_request(1, RequestUpdate(status="closed"))
+    result = await request_dao.update_request(1, RequestUpdate(request_id=1,status="closed"))
 
     # Assert
     assert result.status == "closed"
